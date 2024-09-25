@@ -1,0 +1,34 @@
+services:
+
+  app:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    image: url-bot-image:latest
+    container_name: url-bot-app
+    # network_mode: host
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    volumes:
+      - ./:/app
+    networks:
+      - app-network
+
+  db:
+    image: mongo:6
+    container_name: url-bot-db
+    # network_mode: host
+    restart: unless-stopped
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_DATABASE: app
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
